@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
-    <height>680</height>
+    <width>1039</width>
+    <height>683</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="oldprojectbut">
+   <widget class="QPushButton" name="translatebut">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -23,8 +23,15 @@
       <height>71</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
-     <string>查询历史合同交易</string>
+     <string>Translate Contract</string>
     </property>
    </widget>
    <widget class="QPushButton" name="nowprojectbut">
@@ -69,22 +76,22 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>30</y>
-      <width>431</width>
+      <x>370</x>
+      <y>40</y>
+      <width>281</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Adobe Arabic</family>
-      <pointsize>30</pointsize>
+      <pointsize>42</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Bitcoin </string>
+     <string>FireContract</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="grid">
@@ -92,7 +99,7 @@
      <rect>
       <x>310</x>
       <y>110</y>
-      <width>641</width>
+      <width>711</width>
       <height>461</height>
      </rect>
     </property>
@@ -103,7 +110,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>973</width>
+     <width>1039</width>
      <height>26</height>
     </rect>
    </property>
@@ -122,6 +129,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionHow_to_use"/>
+    <addaction name="actionAbout_us"/>
    </widget>
    <addaction name="menuFail"/>
    <addaction name="menuEdit"/>
@@ -131,6 +139,11 @@
   <action name="actionHow_to_use">
    <property name="text">
     <string>How to use</string>
+   </property>
+  </action>
+  <action name="actionAbout_us">
+   <property name="text">
+    <string>About us</string>
    </property>
   </action>
  </widget>

@@ -94,6 +94,21 @@ def getprint(i, j, n, h, salt, sk, Wifsk, pk, compk, address):
     print 'Address=', address
 
 
+def checking(address, sk):
+    if len(sk) != 52:
+        return False
+    k = base58.b58decode_int(sk)
+    k = hex(k)[4:len(hex(k)) - 11]
+    print k
+    pk = privateKeyToPublicKey(k)
+    com_pk = compressionPk(pk)
+    final_pk = pkHash(com_pk)
+    if address == final_pk:
+        return True
+    else:
+        return False
+
+
 def generate_pq():
     while True:
         i = rabinMiller.generateLargePrime()
@@ -147,3 +162,4 @@ def getall(i, j, inverse3, path):
 
 if __name__ == '__main__':
     main()
+    # checking('cV2tkAFehDQjHXbnJZCpVPeqtB3v7RwGVUPSCVeTwvbCS9hwvm3W')

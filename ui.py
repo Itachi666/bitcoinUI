@@ -7,42 +7,42 @@ import ui_input
 import ui_generate
 import ui_anotherinput
 import ui_sign
+import SkPk
 
 qtCreatorFile = "bitcoin.ui"  # Enter file here.
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
+
 class input(ui_input.QtGui.QDialog):
-    def __init__(self,parent=None):
-        QtGui.QWidget.__init__(self,parent)
-        self.ui=ui_input.Ui_input()    # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = ui_input.Ui_input()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
-
-
-
 
 
 class sign(ui_sign.QtGui.QDialog):
-    def __init__(self,parent=None):
-        QtGui.QWidget.__init__(self,parent)
-        self.ui=ui_sign.Ui_Dialog()    # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = ui_sign.Ui_Dialog()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
+
 
 class LoginDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
-        self.setWindowTitle(u'登录')
+        self.setWindowTitle(u'Loading')
         self.resize(300, 150)
 
         self.leName = QtGui.QLineEdit(self)
-        self.leName.setPlaceholderText(u'用户名')
+        self.leName.setPlaceholderText(u'Address')
 
         self.lePassword = QtGui.QLineEdit(self)
         self.lePassword.setEchoMode(QtGui.QLineEdit.Password)
-        self.lePassword.setPlaceholderText(u'密码')
+        self.lePassword.setPlaceholderText(u'Sk')
 
-        self.pbLogin = QtGui.QPushButton(u'登录', self)
-        self.pbCancel = QtGui.QPushButton(u'取消', self)
+        self.pbLogin = QtGui.QPushButton(u'OK', self)
+        self.pbCancel = QtGui.QPushButton(u'Cancel', self)
 
         self.pbLogin.clicked.connect(self.login)
         self.pbCancel.clicked.connect(self.reject)
@@ -68,20 +68,20 @@ class LoginDialog(QtGui.QDialog):
         self.setLayout(layout)
 
     def login(self):
-        if self.leName.text() == 'admin' and self.lePassword.text() == 'admin':
+        if SkPk.checking(unicode(self.leName.text()), unicode(self.lePassword.text())):
             self.accept()  # 关闭对话框并返回1
         else:
-            QtGui.QMessageBox.critical(self, u'错误', u'用户名密码不匹配')
+            QtGui.QMessageBox.critical(self, u'Error', u'The address and Sk do not match')
 
 
 def login():
     """返回True或False"""
     dialog = LoginDialog()
-    return True
+    return True, 'mhqNzF5fQGpeVHpestNbxz8mPDyjzUcSuJ', 'cNUz3hRMLEq2BXNyG1RunyrFXhYeucdC2sg5buxsWcu2AAG3Gd6q'
     if dialog.exec_():
-        return True
+        return True, dialog.leName.text(), dialog.lePassword.text()
     else:
-        return False
+        return False, 'Null', 'Null'
 
 
 class MyApp(QtGui.QMainWindow, Ui_MainWindow):
@@ -95,9 +95,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.current_row = 0
         self.AddSqlData()
 
-        self.statusBar().showMessage('Your Bitcoin Address: mgN94Z7hRWy4UfZHTj2T8hZd1BctusLkps')
         self.newprojectbut.clicked.connect(self.newproject)
-        self.oldprojectbut.clicked.connect(self.oldproject)
+        self.translatebut.clicked.connect(self.translate)
         self.haveprojectbut.clicked.connect(self.haveproject)
         self.nowprojectbut.clicked.connect(self.nowproject)
 
@@ -118,11 +117,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.tb_edit.addAction(editAction)
         self.tb_del.addAction(delAction)
 
+    def login(self, address, sk):
+        self.address = address
+        self.sk = sk
+        self.statusBar().showMessage('Bitcoin Address: %s, Private Key: %s' % (address, sk))
+
     def set_table(self):
         self.grid.setColumnCount(5)
         self.grid.setRowCount(0)
 
-        column_width = [75, 125, 125, 125, 125]
+        column_width = [100, 140, 140, 140, 140]
         for column in range(5):
             self.grid.setColumnWidth(column, column_width[column])
         headerlabels = ['Id', 'Private', 'Public', 'Address', 'Wif']
@@ -137,10 +141,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def AddSqlData(self):
         cursor = self.conn.execute("SELECT * from account")
         for row in cursor:
-            #print row, '    ', self.current_row
+            # print row, '    ', self.current_row
             self.current_row += 1
             self.grid.insertRow(self.current_row - 1)
-            a = '%d' %row[0]
+            a = '%d' % row[0]
             a = unicode(a, 'utf-8')
             new_item = QtGui.QTableWidgetItem(a)
             self.grid.setItem(self.current_row - 1, 0, new_item)
@@ -205,14 +209,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             return True, Id, Private, Public, Address, Wif
         return False, None, None, None, None, None
 
-    def oldproject(self):
+    def translate(self):
         myapp = input()
         myapp.show()
         myapp.exec_()
-        #print myapp.ui.getdata_p()
-        #print myapp.ui.getdata_q()
-        #print myapp.ui.getdata_inverse()
-        #print myapp.ui.getdata_filepath()
+        # print myapp.ui.getdata_p()
+        # print myapp.ui.getdata_q()
+        # print myapp.ui.getdata_inverse()
+        # print myapp.ui.getdata_filepath()
 
     def nowproject(self):
         data = self.showDialog()
@@ -227,7 +231,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         myapp = generate()
         myapp.show()
         myapp.exec_()
-        print myapp.ui.getdata()
 
     def haveproject(self):
         pass
@@ -235,7 +238,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    if login():
+    t, address, sk = login()
+    if t:
+        address = unicode(address)
+        sk = unicode(sk)
         Window = MyApp()
+        Window.login(address, sk)
         Window.show()
     sys.exit(app.exec_())
