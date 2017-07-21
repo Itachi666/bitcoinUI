@@ -163,3 +163,4 @@ def getall(i, j, inverse3, path):
 if __name__ == '__main__':
     main()
     # checking('cV2tkAFehDQjHXbnJZCpVPeqtB3v7RwGVUPSCVeTwvbCS9hwvm3W')
+    
