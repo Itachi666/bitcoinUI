@@ -43,6 +43,13 @@
       <height>71</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>查询当前合同交易进度</string>
     </property>
@@ -56,11 +63,18 @@
       <height>71</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>发起一次合同交换</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="haveprojectbut">
+   <widget class="QPushButton" name="delprojectbut">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -69,8 +83,15 @@
       <height>71</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
-     <string>存在合同交换申请</string>
+     <string>Delete Translate</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -91,7 +112,7 @@
      </font>
     </property>
     <property name="text">
-     <string>FireContract</string>
+     <string>FairContract</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="grid">

@@ -145,6 +145,9 @@ class Ui_input(QtGui.QWidget):
     def getdata_filepath(self):
         return self.textEdit_3.toPlainText()
 
+    def getdata_all(self):
+        return self.data
+
     def getpandq(self):
         p, q, inverse3 = SkPk.generate_pq()
         i = hex(p)[2:len(hex(p)) - 1]
@@ -207,6 +210,8 @@ class Ui_input(QtGui.QWidget):
         inverse3 = int(inverse3)
 
         path = self.getdata_filepath()
+        path = unicode(path)
+        filename = path[path.rindex("/") + 1:]
         i, j, n, h, salt, sk, Wifsk, pk, com_pk, final_pk = SkPk.getall(p, q, inverse3, path)
 
         hexi = hex(i)[2:len(hex(i)) - 1]
@@ -214,7 +219,7 @@ class Ui_input(QtGui.QWidget):
         hexn = hex(n)[2:len(hex(n)) - 1]
         hexsalt = hex(salt)[2:len(hex(salt)) - 1]
         hexsk = hex(sk)[2:len(hex(sk)) - 1]
-
+        self.data = [filename, Wifsk, com_pk, hexi, hexj, hexn, h, hexsalt, hexsk, pk, final_pk]
         myapp = generate()
         myapp.ui.putdata(hexi, hexj, hexn, h, hexsalt, hexsk, Wifsk, pk, com_pk, final_pk)
         myapp.show()
