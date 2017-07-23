@@ -30,7 +30,7 @@ except AttributeError:
 class Ui_exchange(object):
     def setupUi(self, exchange):
         exchange.setObjectName(_fromUtf8("exchange"))
-        exchange.resize(632, 765)
+        exchange.resize(632, 805)
         self.label = QtGui.QLabel(exchange)
         self.label.setGeometry(QtCore.QRect(10, 0, 351, 31))
         font = QtGui.QFont()
@@ -123,7 +123,11 @@ class Ui_exchange(object):
         self.pushButton_3.setFont(font)
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         self.pushButton_4 = QtGui.QPushButton(exchange)
-        self.pushButton_4.setGeometry(QtCore.QRect(10, 730, 611, 31))
+        self.pushButton_4.setGeometry(QtCore.QRect(10, 770, 611, 31))
+        self.pushButton_5 = QtGui.QPushButton(exchange)
+        self.pushButton_5.setGeometry(QtCore.QRect(10, 720, 611, 41))
+        self.pushButton_5.setFont(font)
+        self.pushButton_5.setObjectName(_fromUtf8("pushButton_4"))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -137,6 +141,7 @@ class Ui_exchange(object):
         self.pushButton.clicked.connect(self.set_a_server)
         self.pushButton_2.clicked.connect(self.connect_ip)
         self.pushButton_3.clicked.connect(self.exchangedata)
+        self.pushButton_5.clicked.connect(self.checking)
 
         self.retranslateUi(exchange)
         QtCore.QObject.connect(self.pushButton_4, QtCore.SIGNAL(_fromUtf8("clicked()")), exchange.accept)
@@ -184,11 +189,19 @@ class Ui_exchange(object):
         self.label_7.setText(_translate("exchange", "IP:", None))
         self.pushButton_3.setText(_translate("exchange", "Data Exchange", None))
         self.pushButton_4.setText(_translate("exchange", "OK", None))
+        self.pushButton_5.setText(_translate("exchange", "Checking Data", None))
 
     def showHint(self):
         hint_msg = QtGui.QMessageBox()
         hint_msg.setWindowTitle('Get connect')
         hint_msg.setText('Welcome!')
+        hint_msg.addButton(QtGui.QMessageBox.Ok)
+        hint_msg.exec_()
+
+    def showHint_2(self):
+        hint_msg = QtGui.QMessageBox()
+        hint_msg.setWindowTitle('Verification Passed')
+        hint_msg.setText('Your partner is honesty!')
         hint_msg.addButton(QtGui.QMessageBox.Ok)
         hint_msg.exec_()
 
@@ -268,6 +281,10 @@ class Ui_exchange(object):
         name = unicode(self.name.toPlainText())
         money = unicode(self.money.toPlainText())
         return name, money
+
+    def checking(self):
+        self.showHint_2()
+        self.textEdit_3.setText('asdf\nasdf\nasdf')
 
 
 class Worker(QtCore.QThread):

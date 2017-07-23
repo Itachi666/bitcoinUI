@@ -7,6 +7,7 @@ import sqlite3
 import ui_input
 import ui_exchange
 import SkPk
+import
 
 qtCreatorFile = "bitcoin.ui"  # Enter file here.
 
