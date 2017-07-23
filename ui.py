@@ -239,6 +239,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def showHint(self):
         hint_msg = QtGui.QMessageBox()
+        hint_msg.setWindowTitle('Error')
         hint_msg.setText('No selected row!')
         hint_msg.addButton(QtGui.QMessageBox.Ok)
         hint_msg.exec_()
@@ -269,21 +270,24 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 old_data.append(unicode(self.grid.item(edit_row, i).text()))
 
             print old_data
+            cursor = self.conn.execute('SELECT * from INFO')
+            mydata = cursor.fetchall()[edit_row]
             myapp = exchange()
+            print mydata
+            myapp.ui.putindata(mydata[6], mydata[7], mydata[8], mydata[9], mydata[10], mydata[11], mydata[12],
+                               mydata[3],SkPk.fromsk2compk(self.sk),mydata[2])
             myapp.show()
             myapp.exec_()
+            new_data = myapp.ui.getdata()
 
-            new_data=['False']
-            if new_data[0]:
-                print old_data
-                self.conn.execute('''UPDATE INFO SET
-                                            Private = '%s', Public = '%s',
-                                            Address = '%s', Wif = '%s'
-                                            WHERE ID = '%d' '''
-                                  % (new_data[1], new_data[2], new_data[3], new_data[4], edit_row + 1))
-                for i in range(4):
-                    new_item = QtGui.QTableWidgetItem(new_data[i + 1])
-                    self.grid.setItem(edit_row, i, new_item)
+            self.conn.execute('''UPDATE INFO SET
+                                        Partername = '%s', Money = '%s'
+                                        WHERE ID = '%d' '''
+                                % (new_data[0], new_data[1], edit_row + 1))
+            for i in range(2):
+                print i,new_data[i]
+                new_item = QtGui.QTableWidgetItem(new_data[i])
+                self.grid.setItem(edit_row, i+3, new_item)
         else:
             self.showHint()
         '''

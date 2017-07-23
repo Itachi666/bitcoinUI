@@ -99,7 +99,6 @@ def checking(address, sk):
         return False
     k = base58.b58decode_int(sk)
     k = hex(k)[4:len(hex(k)) - 11]
-    print k
     pk = privateKeyToPublicKey(k)
     com_pk = compressionPk(pk)
     final_pk = pkHash(com_pk)
@@ -108,6 +107,12 @@ def checking(address, sk):
     else:
         return False
 
+def fromsk2compk(sk):
+    k = base58.b58decode_int(sk)
+    k = hex(k)[4:len(hex(k)) - 11]
+    pk = privateKeyToPublicKey(k)
+    com_pk = compressionPk(pk)
+    return com_pk
 
 def generate_pq():
     while True:
