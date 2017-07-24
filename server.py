@@ -6,7 +6,6 @@ import threading
 
 def tcplink(sock, addr, da):
     print("Accept new connection from %s:%s..." % addr)
-    print da
     sock.send(b'Welcome')
     i = 0
     while True:
@@ -22,7 +21,7 @@ def tcplink(sock, addr, da):
 
 def setserver(da):
     host = socket.gethostname()
-    ip = socket.gethostbyname(host)
+    ip="10.138.77.155"
     print host
     print ip
     port = 12345

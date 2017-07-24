@@ -7,7 +7,7 @@ import sqlite3
 import ui_input
 import ui_exchange
 import SkPk
-import
+import ui_send
 
 qtCreatorFile = "bitcoin.ui"  # Enter file here.
 
@@ -18,6 +18,13 @@ class input(ui_input.QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self.ui = ui_input.Ui_input()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
+        self.ui.setupUi(self)
+
+
+class send(ui_send.QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = ui_send.Ui_send()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
 
 
@@ -94,7 +101,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.initDB()
         self.AddSqlData()
 
-        self.newprojectbut.clicked.connect(self.newproject)
+        self.newprojectbut.clicked.connect(self.createandsendTransaction)
         self.translatebut.clicked.connect(self.translate)
         self.delprojectbut.clicked.connect(self.deltranslate)
         self.nowprojectbut.clicked.connect(self.exchangedata)
@@ -156,12 +163,15 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                         mysalt char(255),
                         myhexsk char(255),
                         mypk char(255),
-                        hisN char(255),
-                        ParterAddress char(255),
+                        mybitsk char(255),
+                        mybitpk char(255),
+                        hisbitpk char(255),
+                        hisbitsk char(255),
                         hisSecretKey char(255),
                         hisPublicKey char(255),
                         hisp char(255),
                         hisq char(255),
+                        hisN char(255),
                         hish char(255))''')
         '''
         cur = self.conn.cursor()
@@ -250,12 +260,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         myapp.show()
         myapp.exec_()
         data = myapp.ui.getdata_all()
+        pk=SkPk.fromsk2compk(self.sk)
+
         self.current_row += 1
         self.conn.execute(
-            "INSERT INTO INFO VALUES(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
-            % (
-                self.current_row, data[0], data[1], data[2], '', '', data[3], data[4], data[5], data[6], data[7],
-                data[8], data[9], '', '', '', '', '', '', ''))
+            "INSERT INTO INFO VALUES(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
+            % (self.current_row, data[0], data[1], data[2], '', '', data[3], data[4], data[5], data[6], data[7], data[8], data[9], self.sk, pk, '', '', '', '', '', '', '', ''))
         self.grid.insertRow(self.current_row - 1)
         d = [data[0], data[1], data[2], '', '']
         for i in range(5):
@@ -266,40 +276,31 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         selected_row = self.grid.selectedItems()
         if selected_row:
             edit_row = self.grid.row(selected_row[0])
-            old_data = []
-            for i in range(5):
-                old_data.append(unicode(self.grid.item(edit_row, i).text()))
 
-            print old_data
             cursor = self.conn.execute('SELECT * from INFO')
             mydata = cursor.fetchall()[edit_row]
             myapp = exchange()
-            print mydata
             myapp.ui.putindata(mydata[6], mydata[7], mydata[8], mydata[9], mydata[10], mydata[11], mydata[12],
-                               mydata[3],SkPk.fromsk2compk(self.sk),mydata[2])
+                               mydata[3], SkPk.fromsk2compk(self.sk), self.sk, mydata[2])
             myapp.show()
             myapp.exec_()
             new_data = myapp.ui.getdata()
-
-            self.conn.execute('''UPDATE INFO SET
-                                        Partername = '%s', Money = '%s'
+            if len(new_data) == 2:
+                self.conn.execute('''UPDATE INFO SET
+                                             Partername = '%s', Money = '%s'
+                                            WHERE ID = '%d' '''
+                                  % (new_data[0], new_data[1], edit_row + 1))
+            else:
+                self.conn.execute('''UPDATE INFO SET
+                                        Partername = '%s', Money = '%s', hisp='%s', hisq='%s', hisN='%s', hish='%s',hisSecretKey='%s',hisPublicKey='%s',hisbitpk='%s',hisbitsk='%s'
                                         WHERE ID = '%d' '''
-                                % (new_data[0], new_data[1], edit_row + 1))
+                                  % (new_data[0], new_data[1], new_data[2], new_data[3], new_data[4], new_data[5],
+                                     new_data[7], new_data[9], new_data[10], new_data[11], edit_row + 1))
             for i in range(2):
-                print i,new_data[i]
                 new_item = QtGui.QTableWidgetItem(new_data[i])
-                self.grid.setItem(edit_row, i+3, new_item)
+                self.grid.setItem(edit_row, i + 3, new_item)
         else:
             self.showHint()
-        '''
-        data = self.showDialog()
-        if data[0]:
-            self.current_row += 1
-            self.grid.insertRow(self.current_row - 1)
-            for i in range(5):
-                new_item = QtGui.QTableWidgetItem(data[i + 1])
-                self.grid.setItem(self.current_row - 1, i, new_item)
-        '''
 
     def deltranslate(self):
         selected_row = self.grid.selectedItems()
@@ -313,10 +314,18 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         else:
             self.showHint()
 
-    def newproject(self):
-        myapp = generate()
-        myapp.show()
-        myapp.exec_()
+    def createandsendTransaction(self):
+        selected_row = self.grid.selectedItems()
+        if selected_row:
+            edit_row = self.grid.row(selected_row[0])
+            cursor = self.conn.execute('SELECT * from INFO')
+            mydata = cursor.fetchall()[edit_row]
+            myapp = send()
+            myapp.ui.putin2data(mydata)
+            myapp.show()
+            myapp.exec_()
+        else:
+            self.showHint()
 
     def haveproject(self):
         pass

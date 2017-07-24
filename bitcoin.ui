@@ -51,7 +51,7 @@
      </font>
     </property>
     <property name="text">
-     <string>查询当前合同交易进度</string>
+     <string>Exchange</string>
     </property>
    </widget>
    <widget class="QPushButton" name="newprojectbut">
@@ -71,7 +71,8 @@
      </font>
     </property>
     <property name="text">
-     <string>发起一次合同交换</string>
+     <string>Create and Send 
+Transaction</string>
     </property>
    </widget>
    <widget class="QPushButton" name="delprojectbut">

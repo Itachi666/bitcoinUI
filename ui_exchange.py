@@ -29,6 +29,7 @@ except AttributeError:
 
 class Ui_exchange(object):
     def setupUi(self, exchange):
+        self.newdata=[]
         exchange.setObjectName(_fromUtf8("exchange"))
         exchange.resize(632, 805)
         self.label = QtGui.QLabel(exchange)
@@ -169,19 +170,19 @@ class Ui_exchange(object):
                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Null</p></body></html>",
                                            None))
         self.name.setHtml(_translate("exchange",
-                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                           "p, li { white-space: pre-wrap; }\n"
-                                           "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">wtf</p></body></html>",
-                                           None))
-        self.money.setHtml(_translate("exchange",
                                      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                      "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                      "p, li { white-space: pre-wrap; }\n"
                                      "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1</p></body></html>",
+                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">wtf</p></body></html>",
                                      None))
+        self.money.setHtml(_translate("exchange",
+                                      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                      "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                      "p, li { white-space: pre-wrap; }\n"
+                                      "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                                      "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1</p></body></html>",
+                                      None))
         self.label_6.setText(_translate("exchange", "Input the bitcoin that you want to pay (temporary)：", None))
         self.pushButton.setText(
             _translate("exchange", "Set a Server (Create a server to let your partner connect)", None))
@@ -205,26 +206,26 @@ class Ui_exchange(object):
         hint_msg.addButton(QtGui.QMessageBox.Ok)
         hint_msg.exec_()
 
-    def putindata(self, p, q, n, h, salt, sk, pk, compk,bitpk,wifsk):
-        self.mydata = [p, q, n, h, salt, sk, pk, compk,bitpk]
+    def putindata(self, p, q, n, h, salt, sk, pk, compk, bitpk, bitsk,wifsk):
+        self.mydata = [p, q, n, h, salt, sk, pk, compk, bitpk,bitsk]
         self.textEdit.setHtml(_translate("exchange",
-                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                           "p, li { white-space: pre-wrap; }\n"
-                                           "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>"%wifsk,
-                                           None))
+                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                         "p, li { white-space: pre-wrap; }\n"
+                                         "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>" % wifsk,
+                                         None))
         self.textEdit_2.setHtml(_translate("exchange",
                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                            "p, li { white-space: pre-wrap; }\n"
                                            "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>"%compk,
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>" % compk,
                                            None))
 
     def set_a_server(self):
         host = socket.gethostname()
-        ip = socket.gethostbyname(host)
+        ip = "10.138.77.155"
         self.money_2.setHtml(_translate("exchange",
                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -253,45 +254,51 @@ class Ui_exchange(object):
         port = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, port))
-        newdata=[]
+        newdata = []
         print(s.recv(1024))
         for data in self.mydata:
             s.send(data.encode())
             newdata.append(s.recv(1024))
         s.send('exit')
         s.close()
-        print newdata
+        self.newdata = newdata
         self.textEdit_3.setHtml(_translate("exchange",
                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                            "p, li { white-space: pre-wrap; }\n"
                                            "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>"%newdata[7],
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>" %
+                                           newdata[7],
                                            None))
         self.textEdit_4.setHtml(_translate("exchange",
                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                            "p, li { white-space: pre-wrap; }\n"
                                            "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>"%newdata[8],
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>" %
+                                           newdata[8],
                                            None))
-
 
     def getdata(self):
         name = unicode(self.name.toPlainText())
         money = unicode(self.money.toPlainText())
-        return name, money
+
+        self.newdata.insert(0,money)
+        self.newdata.insert(0, name)
+        return self.newdata
 
     def checking(self):
         self.showHint_2()
-        self.textEdit_3.setText('asdf\nasdf\nasdf')
+        #self.textEdit_3.setText('asdf\nasdf\nasdf')
 
 
 class Worker(QtCore.QThread):
     def __init__(self, parent=None):
         QtCore.QThread.__init__(self, parent)
-    def render(self,data):
-        self.data=data
+
+    def render(self, data):
+        self.data = data
         self.start()
+
     def run(self):
         server.setserver(self.data)
