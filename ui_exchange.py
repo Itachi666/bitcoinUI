@@ -8,7 +8,48 @@
 
 from PyQt4 import QtCore, QtGui
 import socket
-import server
+#import server
+import socket
+import time
+import threading
+
+global a
+a=[]
+
+def tcplink(sock, addr, da):
+    print("Accept new connection from %s:%s..." % addr)
+    sock.send(b'Welcome')
+    i = 0
+    while True:
+        data = sock.recv(1024)
+        #time.sleep(1)
+        if data == 'exit' or not data:
+            break
+        a.append(data)
+        sock.send('%s' % da[i].encode("utf8"))
+        i = i + 1
+    sock.close()
+    print("Connection from %s: %s closed." % addr)
+
+
+def setserver(da):
+    host = socket.gethostname()
+    ip="10.137.51.176"
+    global a
+    print host
+    print ip
+    port = 12345
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((ip, port))
+    print("1")
+    s.listen(5)
+    while True:
+        # 接受一个新连接：
+        sock, addr = s.accept()
+        # 创建新线程来处理TCP连接
+        t = threading.Thread(target=tcplink, args=(sock, addr, da))
+        t.start()
+        t.join()
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -29,7 +70,6 @@ except AttributeError:
 
 class Ui_exchange(object):
     def setupUi(self, exchange):
-        self.newdata=[]
         exchange.setObjectName(_fromUtf8("exchange"))
         exchange.resize(632, 805)
         self.label = QtGui.QLabel(exchange)
@@ -138,6 +178,7 @@ class Ui_exchange(object):
         self.money_2 = QtGui.QTextEdit(exchange)
         self.money_2.setGeometry(QtCore.QRect(260, 510, 171, 31))
         self.money_2.setObjectName(_fromUtf8("money_2"))
+        self.newdata = []
 
         self.pushButton.clicked.connect(self.set_a_server)
         self.pushButton_2.clicked.connect(self.connect_ip)
@@ -206,8 +247,15 @@ class Ui_exchange(object):
         hint_msg.addButton(QtGui.QMessageBox.Ok)
         hint_msg.exec_()
 
-    def putindata(self, p, q, n, h, salt, sk, pk, compk, bitpk, bitsk,wifsk):
-        self.mydata = [p, q, n, h, salt, sk, pk, compk, bitpk,bitsk]
+    def showHint_3(self):
+        hint_msg = QtGui.QMessageBox()
+        hint_msg.setWindowTitle('Exchange')
+        hint_msg.setText('Exchange Over!')
+        hint_msg.addButton(QtGui.QMessageBox.Ok)
+        hint_msg.exec_()
+
+    def putindata(self, p, q, n, h, salt, sk, pk, compk, bitpk, bitsk, wifsk):
+        self.mydata = [p, q, n, h, salt, sk, pk, compk, bitpk, bitsk]
         self.textEdit.setHtml(_translate("exchange",
                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -225,7 +273,7 @@ class Ui_exchange(object):
 
     def set_a_server(self):
         host = socket.gethostname()
-        ip = "10.138.77.155"
+        ip = '10.137.51.176'
         self.money_2.setHtml(_translate("exchange",
                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -239,6 +287,7 @@ class Ui_exchange(object):
     def connect_ip(self):
         host = 'Lancelot'  # socket.gethostname()
         ip = unicode(self.money_2.toPlainText())
+        print 'ip=', ip
         port = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # 建立链接
@@ -252,10 +301,11 @@ class Ui_exchange(object):
     def exchangedata(self):
         ip = unicode(self.money_2.toPlainText())
         port = 12345
+        print 'ip=', ip
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, port))
         newdata = []
-        print(s.recv(1024))
+        print s.recv(1024)
         for data in self.mydata:
             s.send(data.encode())
             newdata.append(s.recv(1024))
@@ -278,18 +328,21 @@ class Ui_exchange(object):
                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%s</p></body></html>" %
                                            newdata[8],
                                            None))
+        self.showHint_3()
 
     def getdata(self):
         name = unicode(self.name.toPlainText())
         money = unicode(self.money.toPlainText())
+        if len(self.newdata) == 0:
+            self.newdata = a
 
-        self.newdata.insert(0,money)
+        self.newdata.insert(0, money)
         self.newdata.insert(0, name)
         return self.newdata
 
     def checking(self):
         self.showHint_2()
-        #self.textEdit_3.setText('asdf\nasdf\nasdf')
+        # self.textEdit_3.setText('asdf\nasdf\nasdf')
 
 
 class Worker(QtCore.QThread):
@@ -301,4 +354,5 @@ class Worker(QtCore.QThread):
         self.start()
 
     def run(self):
-        server.setserver(self.data)
+        global a
+        setserver(self.data)

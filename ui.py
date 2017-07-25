@@ -285,6 +285,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             myapp.show()
             myapp.exec_()
             new_data = myapp.ui.getdata()
+            print new_data
             if len(new_data) == 2:
                 self.conn.execute('''UPDATE INFO SET
                                              Partername = '%s', Money = '%s'

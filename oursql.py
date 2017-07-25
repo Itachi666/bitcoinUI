@@ -1,17 +1,7 @@
+from blockcypher import pushtx
 
+Hex = '01000000023573cd82132ab9338539a497385abba69bdf0f2dc2e08f0faf11945053fde8a0010000006b483045022100c05c91d8ccd703de44bb641707877113584d1915f921e466437d33ed84732a7302200500316109799c1224cb2f52f638cab62aabc2d7dd7e76f5fd5151ba59c58c0b012103b68793892f1dcb7ea2d78f14e993c1f4075b6e483125f691c55fe858fba2e75dffffffff13ff24d8ccf019c417e8639190bc8e43e29621718f346b69e1cd19aa3b40dd3e000000008b483045022100ee5388a8bc4348c65490d1ca8d83307d05ec2855b127156e3bd260601f65fbe102203312b1d2deb0ac0c7bba8b364cccea9d80d935cbefe143df01ee272c38b24fa001410450d3fd4360b76b6d5c33129620d657b9b0f2703c5ac1edf947840675d17dee5eeb9fc3f77a10a01304bfdcd1812edda92675ff3f2a7d25e7d383032f68267e06ffffffff0100497f0f0000000017a9142349a1de6d8f73ae399ecef22c1c21e6127797268700000000'
+flag = 'btc-testnet'
+mytoken = 'bcd4149ae42a400c9838081564d6ec23'
+print pushtx(Hex, flag, mytoken)
 
-def setsql(param):
-
-
-    conn=sqlite3.connect("accounts.db")
-   # print param
-    c=conn.cursor()
-    sql_insert="insert into {tablename}(id, private, public, address, wif) values {ourvalue}".format(tablename="account",ourvalue=param)
-    try:
-        c.execute(sql_insert)
-    except:
-        'sql_insert is not correct!!'
-    #print sql_insert
-
-    conn.commit()
-    conn.close()
