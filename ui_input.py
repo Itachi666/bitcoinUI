@@ -38,6 +38,7 @@ class Ui_input(QtGui.QWidget):
     def setupUi(self, input):
         input.setObjectName(_fromUtf8("input"))
         input.resize(952, 424)
+        self.setFixedSize(self.width(), self.height())
         self.textEdit = QtGui.QTextEdit(input)
         self.textEdit.setGeometry(QtCore.QRect(260, 20, 641, 91))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))

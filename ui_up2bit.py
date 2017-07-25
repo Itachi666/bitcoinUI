@@ -12,12 +12,14 @@ import socket
 import time
 import threading
 import ui_pic1,ui_pic2,ui_pic3,ui_pic4
+from ouretc import *
 
 global a
 a = '0'
-IP='10.137.51.176'
+
 
 def tcplink(sock, addr, da):
+    global a
     print("Accept new connection from %s:%s..." % addr)
     sock.send(b'Welcome')
     i = 0
@@ -53,7 +55,7 @@ def setserver(da='1'):
 
 
 def send(data):
-    ip = IP
+    ip = IP2
     port = 12345
     print 'ip=', ip
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

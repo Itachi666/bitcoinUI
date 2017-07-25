@@ -12,6 +12,7 @@ import socket
 import socket
 import time
 import threading
+from ouretc import IP
 
 global a
 a=[]
@@ -34,7 +35,7 @@ def tcplink(sock, addr, da):
 
 def setserver(da):
     host = socket.gethostname()
-    ip="10.137.51.176"
+    ip=IP
     global a
     print host
     print ip
@@ -273,7 +274,7 @@ class Ui_exchange(object):
 
     def set_a_server(self):
         host = socket.gethostname()
-        ip = '10.137.51.176'
+        ip = IP
         self.money_2.setHtml(_translate("exchange",
                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

@@ -352,4 +352,4 @@ txhex0 = '0100000001fba480d0b4ac91899b81a9569384162d4339b9da028594ac058b62aac363
 priv = 'cNGtjNKw9y9oVKQDn6RKMsXLuDiaxN3Z7Fb1JPkrCsdbiDNwn6Wy'
 v,r,s = sig_transaction(txhex0,priv)
 sig1 = der_encode_sig(v,r,s)
-print sig1
+#print sig1

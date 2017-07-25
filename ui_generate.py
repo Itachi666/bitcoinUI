@@ -32,7 +32,6 @@ class details(ui_details.QtGui.QDialog):
         self.ui = ui_details.Ui_details()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
 
-
 class Ui_Generated(object):
     def setupUi(self, Generated):
         Generated.setObjectName(_fromUtf8("Generated"))

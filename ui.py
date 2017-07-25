@@ -8,6 +8,7 @@ import ui_input
 import ui_exchange
 import SkPk
 import ui_send
+from ouretc import *
 
 qtCreatorFile = "bitcoin.ui"  # Enter file here.
 
@@ -84,7 +85,8 @@ class LoginDialog(QtGui.QDialog):
 def login():
     """返回True或False"""
     dialog = LoginDialog()
-    return True, 'mhqNzF5fQGpeVHpestNbxz8mPDyjzUcSuJ', 'cNUz3hRMLEq2BXNyG1RunyrFXhYeucdC2sg5buxsWcu2AAG3Gd6q'
+    if dbg:
+        return True, 'mhqNzF5fQGpeVHpestNbxz8mPDyjzUcSuJ', 'cNUz3hRMLEq2BXNyG1RunyrFXhYeucdC2sg5buxsWcu2AAG3Gd6q'
     if dialog.exec_():
         return True, dialog.leName.text(), dialog.lePassword.text()
     else:
@@ -100,7 +102,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.set_table()
         self.initDB()
         self.AddSqlData()
-
+        self.setWindowIcon(QtGui.QIcon('h19.ico'))
+        self.setFixedSize(self.width(),self.height())
         self.newprojectbut.clicked.connect(self.createandsendTransaction)
         self.translatebut.clicked.connect(self.translate)
         self.delprojectbut.clicked.connect(self.deltranslate)
