@@ -226,13 +226,13 @@ class Ui_Dialog(object):
 
         lbl_txid1 = QtGui.QLabel('txid1:', group)
         le_txid1 = QtGui.QLineEdit(group)
-        le_txid1.setText('a0e8fd53509411af0f8fe0c22d0fdf9ba6bb5a3897a4398533b92a1382cd7335')
+        le_txid1.setText('abf0fa9e0f4c359fa02d0fe2ba39820df559d6c6519f08f3e068be2682f1b83b')
         lbl_vout1 = QtGui.QLabel('vout:', group)
         le_vout1 = QtGui.QLineEdit(group)
-        le_vout1.setText('1')
+        le_vout1.setText('0')
         lbl_txid2 = QtGui.QLabel('txid2:', group)
         le_txid2 = QtGui.QLineEdit(group)
-        le_txid2.setText('3edd403baa19cde1696b348f712196e2438ebc909163e817c419f0ccd824ff13')
+        le_txid2.setText('39ecc804fa4f073d809ce6c832bbf2f894bb724f5f2a2ed18356f4112ad9d287')
         lbl_vout2 = QtGui.QLabel('vout:', group)
         le_vout2 = QtGui.QLineEdit(group)
         le_vout2.setText('0')
@@ -275,9 +275,10 @@ class Ui_Dialog(object):
         data = self.showDialog()
         if data[0]:
             pre_txid1 = data[1]
-            voutx1 = data[2]
+            voutx1 = int(data[2])
             pre_txid2 = data[3]
-            voutx2 = data[4]
+            voutx2 = int(data[4])
+            #print voutx1,voutx2
             z = float(self.mydata[5])
             ha = self.mydata[9]
             pkb = self.mydata[15]

@@ -145,13 +145,13 @@ def createfundingtx(pre_txid1, voutx1, pre_txid2, voutx2, z, ha, pkb, pkam, nseq
     n_version = '01000000'
     vin = '02'
     vin_hash1 = backstr(pre_txid1)
-    if voutx1 == '0':
+    if voutx1 == 0:
         vin_n1 = '00000000'
     else:
         vin_n1 = '01000000'
     vin_nsequence1 = 'ffffffff'
     vin_hash2 = backstr(pre_txid2)
-    if voutx2 == '0':
+    if voutx2 == 0:
         vin_n2 = '00000000'
     else:
         vin_n2 = '01000000'
@@ -233,13 +233,14 @@ def createone2onetx(pre_txid, voutx, value, pk):
 
 
 def sign_fundingtransaction(fundingtx_1, fundingtx_2, fundingtx_3, pka, ska, pkb, skb):
-    siga = sign_transaction(createfundingtx_hex0(0, fundingtx_1, fundingtx_2, fundingtx_3,pka), ska)
-    sigb = sign_transaction(createfundingtx_hex0(1, fundingtx_1, fundingtx_2, fundingtx_3,pkb), skb)
+    siga = sign_transaction(createfundingtx_hex0(0, fundingtx_1, fundingtx_2, fundingtx_3, pka), ska)
+    sigb = sign_transaction(createfundingtx_hex0(1, fundingtx_1, fundingtx_2, fundingtx_3, pkb), skb)
     scriptsig1 = call_len(len(siga)) + siga + call_len(len(pka)) + pka
     scriptsig2 = call_len(len(sigb)) + sigb + call_len(len(pkb)) + pkb
     sign_fundingtransaction = fundingtx_1 + dec2var_byte(
         len(scriptsig1) // 2) + scriptsig1 + fundingtx_2 + dec2var_byte(len(scriptsig2) // 2) + scriptsig2 + fundingtx_3
-    return sign_fundingtransaction, siga, sigb
+    txid1 = backstr(hash256(sign_fundingtransaction))
+    return sign_fundingtransaction, siga, sigb, txid1
 
 
 def sign_commitmenttransaction(commitmenttx_1, commitmenttx_2, ska, skb, redeemscripta, ha):
@@ -248,14 +249,16 @@ def sign_commitmenttransaction(commitmenttx_1, commitmenttx_2, ska, skb, redeems
     scriptsig = '00' + call_len(len(sigb1)) + sigb1 + call_len(len(sigam)) + sigam + call_len(len(ha)) + ha + call_len(
         len(redeemscripta)) + redeemscripta
     sign_commitmenttransaction = commitmenttx_1 + dec2var_byte(len(scriptsig) // 2) + scriptsig + commitmenttx_2
-    return sign_commitmenttransaction, sigam, sigb1
+    txid2 = backstr(hash256(sign_commitmenttransaction))
+    return sign_commitmenttransaction, sigam, sigb1, txid2
 
 
 def sign_timeoutcommitmenttransaction(one2onetx_1, one2onetx_2, skb, redeemscripta, ha1):
     sigb2 = sign_transaction(createp2shinputtx_hex0(one2onetx_1, one2onetx_2, redeemscripta), skb)
     scriptsig = call_len(len(sigb2)) + sigb2 + call_len(len(ha1)) + ha1 + call_len(len(redeemscripta)) + redeemscripta
     sign_timeoutcommitmenttransaction = one2onetx_1 + dec2var_byte(len(scriptsig) // 2) + scriptsig + one2onetx_2
-    return sign_timeoutcommitmenttransaction, sigb2
+    txid3 = backstr(hash256(sign_timeoutcommitmenttransaction))
+    return sign_timeoutcommitmenttransaction, sigb2, txid3
 
 
 def sign_deliverytransaction(one2onetx_1, one2onetx_2, ska, skb, redeemscriptb, hb):
@@ -264,11 +267,13 @@ def sign_deliverytransaction(one2onetx_1, one2onetx_2, ska, skb, redeemscriptb, 
     scriptsig = '00' + call_len(len(siga1)) + siga1 + call_len(len(sigbm)) + sigbm + call_len(len(hb)) + hb + call_len(
         len(redeemscriptb)) + redeemscriptb
     sign_deliverytransaction = one2onetx_1 + dec2var_byte(len(scriptsig) // 2) + scriptsig + one2onetx_2
-    return sign_deliverytransaction, siga1, sigbm
+    txid4 = backstr(hash256(sign_deliverytransaction))
+    return sign_deliverytransaction, siga1, sigbm, txid4
 
 
 def sign_timeoutdeliverytransaction(one2onetx_1, one2onetx_2, ska, redeemscriptb, hb1):
     siga2 = sign_transaction(createp2shinputtx_hex0(one2onetx_1, one2onetx_2, redeemscriptb), ska)
     scriptsig = call_len(len(siga2)) + siga2 + call_len(len(hb1)) + hb1 + call_len(len(redeemscriptb)) + redeemscriptb
     sign_timeoutdeliverytransaction = one2onetx_1 + dec2var_byte(len(scriptsig) // 2) + scriptsig + one2onetx_2
-    return sign_timeoutdeliverytransaction, siga2
+    txid5 = backstr(hash256(sign_timeoutdeliverytransaction))
+    return sign_timeoutdeliverytransaction, siga2, txid5

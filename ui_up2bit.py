@@ -11,8 +11,10 @@ from time import strftime, gmtime
 import socket
 import time
 import threading
-import ui_pic1,ui_pic2,ui_pic3,ui_pic4
+import ui_pic1, ui_pic2, ui_pic3, ui_pic4
 from ouretc import *
+import ui_showtxid
+from blockcypher import pushtx
 
 global a
 a = '0'
@@ -29,6 +31,7 @@ def tcplink(sock, addr, da):
         if data == 'exit' or not data:
             break
         a = data
+        print data,a
         sock.send('%s' % a.encode("utf8"))
     sock.close()
     print("Connection from %s: %s closed." % addr)
@@ -40,7 +43,7 @@ def setserver(da='1'):
     global a
     print host
     print ip
-    port = 12345
+    port = PORT
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((ip, port))
     print("1")
@@ -56,7 +59,7 @@ def setserver(da='1'):
 
 def send(data):
     ip = IP2
-    port = 12345
+    port = PORT
     print 'ip=', ip
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((ip, port))
@@ -90,11 +93,13 @@ class pic1(ui_pic1.QtGui.QDialog):
         self.ui = ui_pic1.Ui_pic1()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
 
+
 class pic2(ui_pic2.QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self.ui = ui_pic2.Ui_pic2()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
+
 
 class pic3(ui_pic3.QtGui.QDialog):
     def __init__(self, parent=None):
@@ -102,11 +107,19 @@ class pic3(ui_pic3.QtGui.QDialog):
         self.ui = ui_pic3.Ui_pic3()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
 
+
 class pic4(ui_pic4.QtGui.QDialog):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self.ui = ui_pic4.Ui_pic4()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
         self.ui.setupUi(self)
+
+class showtxid(ui_showtxid.QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = ui_showtxid.Ui_showtxid()  # Ui_Dialog为.ui产生.py文件中窗体类名，经测试类名以Ui_为前缀，加上UI窗体对象名（此处为Dialog，见上图）
+        self.ui.setupUi(self)
+
 
 class Ui_send2bit(object):
     def setupUi(self, send2bit):
@@ -248,6 +261,7 @@ class Ui_send2bit(object):
         self.pushButton_4.clicked.connect(self.sendtcommit)
         self.pushButton_5.clicked.connect(self.senddelivery)
         self.pushButton_6.clicked.connect(self.sendtdelivery)
+        self.pushButton_9.clicked.connect(self.showtxid)
         self.k = Worker()
         self.k.render()
 
@@ -276,7 +290,7 @@ class Ui_send2bit(object):
         self.label_3.setText(_translate("send2bit", "Are you going to send Funding Transaction?", None))
         self.pushButton_7.setText(_translate("send2bit", "Yes", None))
         self.pushButton_8.setText(_translate("send2bit", "No", None))
-        self.pushButton_9.setText(_translate("send2bit", "Refresh", None))
+        self.pushButton_9.setText(_translate("send2bit", "Gettxid", None))
 
     def showHint(self):
         hint_msg = QtGui.QMessageBox()
@@ -285,39 +299,56 @@ class Ui_send2bit(object):
         hint_msg.addButton(QtGui.QMessageBox.Ok)
         hint_msg.exec_()
 
+    def showHint2(self):
+        hint_msg = QtGui.QMessageBox()
+        hint_msg.setWindowTitle('Congratulation!')
+        hint_msg.setText('Sent failed')
+        hint_msg.addButton(QtGui.QMessageBox.Ok)
+        hint_msg.exec_()
+
+    def showtxid(self):
+        myapp = showtxid()
+        myapp.ui.putin2data(self.txid)
+        myapp.show()
+        myapp.exec_()
+
     def checking(self):
         global a
-        print 'a=',a
-        if a=='0':
+        print 'a=', a
+        if a == '0':
             myapp = pic1()
             myapp.show()
             myapp.exec_()
-        if a=='1':
+        if a == '1':
             myapp = pic2()
             myapp.show()
             myapp.exec_()
-        if a=='2':
+        if a == '2':
             myapp = pic3()
             myapp.show()
             myapp.exec_()
-        if a=='3':
+        if a == '3':
             myapp = pic4()
             myapp.show()
             myapp.exec_()
-
 
     def sendfunding(self):
         global a
         t = strftime("%Y-%m-%d %H:%M")
         self.time = unicode(t)
         self.lineEdit_2.setText(_translate("send2bit", self.time, None))
-        a='1'
+        a = '1'
         send('1')
+
+        flag = 'btc-testnet'
+        mytoken = 'bcd4149ae42a400c9838081564d6ec23'
+        print pushtx(self.sigid[0], flag, mytoken)
+
         self.showHint()
 
     def sendcommit(self):
         global a
-        a='2'
+        a = '2'
         send('2')
         self.showHint()
         t = strftime("%Y-%m-%d %H:%M")
@@ -326,7 +357,7 @@ class Ui_send2bit(object):
 
     def sendtcommit(self):
         self.count = 3
-        self.showHint()
+        self.showHint2()
 
     def senddelivery(self):
         global a
@@ -336,7 +367,12 @@ class Ui_send2bit(object):
 
     def sendtdelivery(self):
         self.count = 5
-        self.showHint()
+        self.showHint2()
+
+    def putin2data(self, sigid, txid):
+        self.sigid = sigid
+        self.txid = txid
+
 
 class Worker(QtCore.QThread):
     def __init__(self, parent=None):

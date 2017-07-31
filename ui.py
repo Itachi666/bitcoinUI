@@ -86,7 +86,7 @@ def login():
     """返回True或False"""
     dialog = LoginDialog()
     if dbg:
-        return True, 'mhqNzF5fQGpeVHpestNbxz8mPDyjzUcSuJ', 'cNUz3hRMLEq2BXNyG1RunyrFXhYeucdC2sg5buxsWcu2AAG3Gd6q'
+        return True, 'mvxZtgKLrRNCvgKg3BdBn1aUbSw9hFKqfh', 'cSaxnL9ZswHtH9a43XVVpDUuZsuGAJExXMMtk7ryky3vgt1hBE5d'
     if dialog.exec_():
         return True, dialog.leName.text(), dialog.lePassword.text()
     else:

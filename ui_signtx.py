@@ -221,14 +221,17 @@ class Ui_signtx(object):
         ska = self.mydata[13]
         pkb = self.mydata[15]
         skb = self.mydata[16]
-        sign_fundingtransaction, siga, sigb = tx.sign_fundingtransaction(fundingtx_1, fundingtx_2, fundingtx_3, pka,
-                                                                         ska, pkb, skb)
+        #print fundingtx_1, fundingtx_2,fundingtx_3, pka,ska, pkb, skb
+        sign_fundingtransaction, siga, sigb, self.txid1 = tx.sign_fundingtransaction(fundingtx_1, fundingtx_2,
+                                                                                     fundingtx_3, pka,
+                                                                                     ska, pkb, skb)
         self.tx1 = sign_fundingtransaction
         self.sa1 = siga
         self.sb1 = sigb
         jsontxt = common.raw2json(sign_fundingtransaction)
         k = json.dumps(jsontxt)
-        self.textEdit.setText('Hex= ' + sign_fundingtransaction + '\n' + 'Siga= ' + siga + '\n' + 'Sigb= ' + sigb)
+        self.textEdit.setText(
+            'Txid= ' + self.txid1 + '\n' + 'Hex= ' + sign_fundingtransaction + '\n' + 'Siga= ' + siga + '\n' + 'Sigb= ' + sigb)
 
     def CommitmentTransaction(self):
         commitmenttx_1 = self.ct[2]
@@ -237,14 +240,16 @@ class Ui_signtx(object):
         skb = self.mydata[16]
         redeemscripta = self.ft[1]
         ha = self.mydata[9]
-        sign_commitmenttransaction, sigam, sigb1 = tx.sign_commitmenttransaction(commitmenttx_1, commitmenttx_2, ska,
-                                                                                 skb, redeemscripta, ha)
+        sign_commitmenttransaction, sigam, sigb1, self.txid2 = tx.sign_commitmenttransaction(commitmenttx_1,
+                                                                                             commitmenttx_2, ska,
+                                                                                             skb, redeemscripta, ha)
         self.tx2 = sign_commitmenttransaction
         self.sa2 = sigam
         self.sb2 = sigb1
         jsontxt = common.raw2json(sign_commitmenttransaction)
         k = json.dumps(jsontxt)
-        self.textEdit.setText('Hex= ' + sign_commitmenttransaction + '\n' + 'Sigb1= ' + sigb1)
+        self.textEdit.setText(
+            'Txid= ' + self.txid2 + '\n' + 'Hex= ' + sign_commitmenttransaction + '\n' + 'Sigb1= ' + sigb1)
 
     def TimeCommitmentTransaction(self):
         one2onetx_1 = self.tct[1]
@@ -252,13 +257,15 @@ class Ui_signtx(object):
         skb = self.mydata[16]
         redeemscripta = self.ft[1]
         ha1 = '6' + self.mydata[9][1:]
-        sign_timeoutcommitmenttransaction, sigb2 = tx.sign_timeoutcommitmenttransaction(one2onetx_1, one2onetx_2, skb,
-                                                                                        redeemscripta, ha1)
+        sign_timeoutcommitmenttransaction, sigb2, self.txid3 = tx.sign_timeoutcommitmenttransaction(one2onetx_1,
+                                                                                                    one2onetx_2, skb,
+                                                                                                    redeemscripta, ha1)
         self.tx3 = sign_timeoutcommitmenttransaction
         self.sb3 = sigb2
         jsontxt = common.raw2json(sign_timeoutcommitmenttransaction)
         k = json.dumps(jsontxt)
-        self.textEdit.setText('Hex= ' + sign_timeoutcommitmenttransaction + '\n' + 'Sigb2= ' + sigb2)
+        self.textEdit.setText(
+            'Txid= ' + self.txid3 + '\n' + 'Hex= ' + sign_timeoutcommitmenttransaction + '\n' + 'Sigb2= ' + sigb2)
 
     def DeliveryTransaction(self):
         one2onetx_1 = self.dt[1]
@@ -267,14 +274,16 @@ class Ui_signtx(object):
         skb = self.mydata[16]
         redeemscriptb = self.ct[1]
         hb = self.mydata[22]
-        sign_deliverytransaction, siga1, sigbm = tx.sign_deliverytransaction(one2onetx_1, one2onetx_2, ska, skb,
-                                                                             redeemscriptb, hb)
+        sign_deliverytransaction, siga1, sigbm, self.txid4 = tx.sign_deliverytransaction(one2onetx_1, one2onetx_2, ska,
+                                                                                         skb,
+                                                                                         redeemscriptb, hb)
         self.tx4 = sign_deliverytransaction
         self.sa4 = siga1
         self.sb4 = sigbm
         jsontxt = common.raw2json(sign_deliverytransaction)
         k = json.dumps(jsontxt)
-        self.textEdit.setText('Hex= ' + sign_deliverytransaction + '\n' + 'Siga1= ' + siga1)
+        self.textEdit.setText(
+            'Txid= ' + self.txid4 + '\n' + 'Hex= ' + sign_deliverytransaction + '\n' + 'Siga1= ' + siga1)
 
     def TimeDeliveryTransaction(self):
         one2onetx_1 = self.tdt[1]
@@ -283,16 +292,19 @@ class Ui_signtx(object):
         skb = self.mydata[16]
         redeemscriptb = self.ct[1]
         hb1 = '6' + self.mydata[22][1:]
-        sign_timeoutdeliverytransaction, siga2 = tx.sign_timeoutdeliverytransaction(one2onetx_1, one2onetx_2, ska,
-                                                                                    redeemscriptb, hb1)
+        sign_timeoutdeliverytransaction, siga2, self.txid5 = tx.sign_timeoutdeliverytransaction(one2onetx_1,
+                                                                                                one2onetx_2, ska,
+                                                                                                redeemscriptb, hb1)
         self.tx5 = sign_timeoutdeliverytransaction
         self.sa5 = siga2
 
         jsontxt = common.raw2json(sign_timeoutdeliverytransaction)
         k = json.dumps(jsontxt)
-        self.textEdit.setText('Hex= ' + sign_timeoutdeliverytransaction + '\n' + 'Siga2= ' + siga2)
+        self.textEdit.setText(
+            'Txid= ' + self.txid5 + '\n' + 'Hex= ' + sign_timeoutdeliverytransaction + '\n' + 'Siga2= ' + siga2)
 
     def getsigndata(self):
         return [self.tx1, self.tx2, self.tx3, self.tx4, self.tx5], \
                [self.sa1, self.sa2, self.sa4, self.sa5], \
-               [self.sb1, self.sb2, self.sb3, self.sb4]
+               [self.sb1, self.sb2, self.sb3, self.sb4], \
+               [self.txid1, self.txid2, self.txid3, self.txid4, self.txid5]

@@ -119,7 +119,7 @@ class Ui_send(object):
         myapp.ui.putin2data(self.mydata, self.a, self.b, self.c, self.d, self.e)
         myapp.show()
         myapp.exec_()
-        self.sigtx, self.siga, self.sigb = myapp.ui.getsigndata()
+        self.sigtx, self.siga, self.sigb, self.txid = myapp.ui.getsigndata()
 
     def showHint(self):
         hint_msg = QtGui.QMessageBox()
@@ -133,6 +133,7 @@ class Ui_send(object):
 
     def uptx(self):
         myapp = up2bit()
+        myapp.ui.putin2data(self.sigtx,self.txid)
         myapp.show()
         myapp.exec_()
 
